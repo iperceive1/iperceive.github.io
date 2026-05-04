@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f2937" />
+
+  <title>I-Perceive — Anonymous project page</title>
+  <meta name="description" content="Anonymous project page for the I-Perceive paper, including an online inference demo." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Bulma keeps the typography and layout close to the standard
+       academic project-page look (Nerfies / similar). -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <link rel="stylesheet" href="static/css/style.css" />
+</head>
+<body>
+
+<!-- ===================== Hero ===================== -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop has-text-centered">
+      <h1 class="title is-2 publication-title">
+        I-Perceive: <!--span style="opacity:.7"-->A Foundation Model for
+Vision-Language Active Perception<!--/span-->
+      </h1>
+
+      <p class="publication-authors">
+        Anonymous Authors
+      </p>
+
+      <div class="publication-links" style="margin-top: 1.25rem;">
+        <span class="link-block">
+          <a id="link-paper" class="button is-dark is-rounded">
+            <span class="icon"><i>📄</i></span>
+            <span>Paper</span>
+          </a>
+        </span>
+        <span class="link-block">
+          <a id="link-code" class="button is-dark is-rounded">
+            <span class="icon"><i>{ }</i></span>
+            <span>Code</span>
+          </a>
+        </span>
+        <span class="link-block">
+          <a href="#demo" class="button is-link is-rounded">
+            <span class="icon"><i>▶</i></span>
+            <span>Live demo</span>
+          </a>
+        </span>
+      </div>
+
+      <div class="anon-banner">
+        <span>🔒</span>
+        <span>
+          This page is hosted anonymously while the paper is under review.
+          Authors, affiliations, code, and the camera-ready URL will be revealed
+          after the review process.
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== Abstract ===================== -->
+<section class="section abstract">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Abstract</h2>
+    <div class="abstract-body">
+      <p>
+        Active perception, the ability of a robot to proactively adjust its viewpoint to acquire task-relevant information, is essential for robust operation in unstructured real-world environments. 
+While critical for downstream tasks such as manipulation, existing approaches have largely been confined to local settings (e.g., table-top scenes) with fixed perception objectives (e.g., occlusion reduction). 
+Addressing active perception with open-ended intents in large-scale environments remains an open challenge. 
+To bridge this gap, we propose I-Perceive, a foundation model for active perception conditioned on natural language instructions, designed for mobile manipulators and indoor environments. 
+I-Perceive predicts camera views that follows open-ended language instructions, based on image-based scene contexts. 
+By fusing a Vision-Language Model (VLM) backbone with a geometric foundation model, I-Perceive bridges semantic and geometric understanding, thus enabling effective reasoning for active perception.
+We train I-Perceive on a diverse dataset comprising real-world scene-scanning data and simulation data, both processed via an automated and scalable data generation pipeline. 
+Experiments demonstrate that I-Perceive significantly outperforms state-of-the-art VLMs in both prediction accuracy and instruction following of generated camera views, and exhibits strong zero-shot generalization to novel scenes and tasks.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== Online Demo ===================== -->
+<section id="demo" class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Online demo</h2>
+    <p class="has-text-centered" style="color: var(--ip-muted); margin-bottom: 1.5rem;">
+      Upload up to a handful of photos of a scene, describe a task, and the
+      backend will predict the next-best viewpoint and visualise it as a 3D
+      point cloud. Inference runs on a single GPU on our private compute node.
+      <span id="backend-version" style="margin-left:.4rem; font-size:.85rem;"></span>
+    </p>
+
+    <div class="demo-card">
+      <!-- Image source -->
+      <div class="demo-field">
+        <label class="demo-field-label">1. Choose images</label>
+        <div class="demo-actions">
+          <label class="file-pill">
+            <span>📷 Upload images</span>
+            <input id="files" type="file" accept="image/*" multiple />
+          </label>
+          <span style="color: var(--ip-muted); font-size: 0.9rem;">or</span>
+          <select id="examples" class="example-select" aria-label="Examples">
+            <option value="">— pick an example —</option>
+          </select>
+        </div>
+        <p id="files-hint" class="demo-hint">
+          Choose up to 6 photos. Each is center-cropped to 1024×1024 before upload.
+        </p>
+      </div>
+
+      <!-- Preview thumbs -->
+      <div class="demo-field">
+        <label class="demo-field-label">2. Pick the start frame</label>
+        <div id="thumbs" class="thumbs">
+          <div class="thumbs-empty">No images yet.</div>
+        </div>
+        <p class="demo-hint">Click a thumbnail to set it as the start frame (★).</p>
+      </div>
+
+      <!-- Instruction -->
+      <div class="demo-field">
+        <label class="demo-field-label" for="instruction">3. Instruction</label>
+        <textarea id="instruction" class="demo-input" rows="2"
+          placeholder="e.g. Open the top drawer under the table"></textarea>
+      </div>
+
+      <!-- Start image canvas + optional point -->
+      <div class="demo-field">
+        <label class="demo-field-label">4. (Optional) Anchor point</label>
+        <div class="demo-actions" style="margin-bottom: 0.6rem;">
+          <button id="btn-toggle-point" type="button" class="btn-link">
+            Add point hint
+          </button>
+        </div>
+        <div id="point-section" hidden>
+          <div class="start-image-wrap">
+            <canvas id="start-canvas" width="1024" height="1024"></canvas>
+          </div>
+          <div class="point-row">
+            <span id="point-text" class="point-text">
+              Click on the start frame to drop an anchor point.
+            </span>
+            <button id="btn-clear-point" type="button" class="btn-link">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="demo-field" style="margin-bottom:0;">
+        <button id="btn-submit" class="btn-primary">Run inference</button>
+        <div id="status" class="demo-status" hidden></div>
+      </div>
+
+      <!-- Viewer panel -->
+      <div id="viewer-panel" class="viewer-panel" hidden>
+        <div class="viewer-header">
+          <strong>3D viewer</strong>
+          <a id="open-viser" href="#" target="_blank" rel="noopener" class="btn-link">
+            Open in new tab ↗
+          </a>
+        </div>
+        <div class="viewer-frame-wrap">
+          <iframe id="viser-frame" src="about:blank" allow="fullscreen"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="notes" style="margin-top: 1.25rem;">
+      <ul>
+        <li>
+          The demo runs on a single private GPU. Requests are processed
+          one at a time; expect a short wait under load.
+        </li>
+        <li>
+          Uploaded images and inference outputs are stored on our
+          private compute node for debugging during the review period
+          and may be removed without notice. Please do not upload
+          sensitive content.
+        </li>
+        <li>
+          The 3D viewer streams point clouds over WebSocket; opening it
+          in a new tab can help on slower connections.
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>
+    Anonymous project page. Hosted on GitHub Pages. Demo backend at
+    <code>api.i-perceive.com</code>.
+  </p>
+</footer>
+
+<script src="static/js/config.js"></script>
+<script src="static/js/demo.js"></script>
+</body>
+</html>
