@@ -139,9 +139,10 @@ Vision-Language Active Perception<!--/span-->
       <div id="viewer-panel" class="viewer-panel" hidden>
         <div class="viewer-header">
           <strong>3D viewer</strong>
-          <a id="open-viser" href="#" target="_blank" rel="noopener" class="btn-link">
+          <!--a id="open-viser" href="#" target="_blank" rel="noopener" class="btn-link">
             Open in new tab ↗
-          </a>
+          </a-->
+          <!-- Do not open in new tab. Use the embedded viewer only. -->
         </div>
         <div class="viewer-frame-wrap">
           <iframe id="viser-frame" src="about:blank" allow="fullscreen"></iframe>
@@ -153,18 +154,10 @@ Vision-Language Active Perception<!--/span-->
     <div class="notes" style="margin-top: 1.25rem;">
       <ul>
         <li>
-          The demo runs on a single private GPU. Requests are processed
-          one at a time; expect a short wait under load.
+          The demo runs on a single private GPU. Requests are processed one at a time; expect a short wait under load. 
         </li>
         <li>
-          Uploaded images and inference outputs are stored on our
-          private compute node for debugging during the review period
-          and may be removed without notice. Please do not upload
-          sensitive content.
-        </li>
-        <li>
-          The 3D viewer streams point clouds over WebSocket; opening it
-          in a new tab can help on slower connections.
+          Please do not upload sensitive content.
         </li>
       </ul>
     </div>
@@ -185,8 +178,7 @@ Vision-Language Active Perception<!--/span-->
 
 <footer class="footer">
   <p>
-    Anonymous project page. Hosted on GitHub Pages. Demo backend at
-    <code>api.i-perceive.com</code>.
+    Anonymous project page. Hosted on GitHub Pages.
   </p>
 </footer>
 
