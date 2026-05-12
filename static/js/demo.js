@@ -35,7 +35,7 @@ async function init() {
     const info = await (await fetch(`${API}/info`)).json();
     state.maxInput = (info.max_context_frames ?? 5) + 1;
     $("files-hint").textContent =
-      `Choose up to ${state.maxInput} photos. Each is center-cropped to 1024×1024 before upload.`;
+      `Choose up to ${state.maxInput} photos.`;
     $("backend-version").textContent = `backend ${info.model_version}`;
   } catch (e) {
     setStatus(
