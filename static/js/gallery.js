@@ -262,7 +262,6 @@ function updateInfoPanel(basePath, sd) {
     (sd.images.context || []).forEach((p, i) => {
       imgs.push({ src: `${basePath}/${p}`, label: `Ctx ${i}` });
     });
-    if (sd.images.target) imgs.push({ src: `${basePath}/${sd.images.target}`, label: 'Target (GT)' });
 
     imgs.forEach(({ src, label }) => {
       const wrap = document.createElement('div');
@@ -276,6 +275,13 @@ function updateInfoPanel(basePath, sd) {
   const renderRow = document.getElementById('gallery-render-images');
   if (renderRow) {
     renderRow.innerHTML = '';
+    // Target (GT) as first entry with matching frustum color
+    if (sd.images.target) {
+      const wrap = document.createElement('div');
+      wrap.className = 'gallery-thumb';
+      wrap.innerHTML = `<img src="${basePath}/${sd.images.target}" alt="Target (GT)" style="border:3px solid rgb(144,238,144)"><span>Target (GT)</span>`;
+      renderRow.appendChild(wrap);
+    }
     const renders = sd.images.renders || {};
     (sd.algorithms || []).forEach(algo => {
       const rPath = renders[algo.key];
